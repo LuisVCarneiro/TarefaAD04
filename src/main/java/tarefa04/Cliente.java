@@ -70,7 +70,7 @@ public class Cliente implements Serializable {
         this.email = teclado.nextLine();
     }
     
-    public void engadirCliente(){
+    public void addCliente(){
         datosCliente();
         try{
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -89,7 +89,7 @@ public class Cliente implements Serializable {
         }
     }
     
-    public void mostrarClientes(){
+    public void listClientes(){
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Query q = session.createQuery("SELECT c FROM Cliente c");
@@ -104,7 +104,7 @@ public class Cliente implements Serializable {
         }
     }
     
-    public String seleccionarCliente(){
+    public String selectCliente(){
         Scanner teclado = new Scanner (System.in);
         System.out.println("Escribe o nome do cliente que desexas seleccionar");
         try {
@@ -134,7 +134,7 @@ public class Cliente implements Serializable {
     }
     
     
-    public void eliminarCliente(Cliente c1){
+    public void deleteCliente(Cliente c1){
 
         try{
             Session session = HibernateUtil.getSessionFactory().openSession();   

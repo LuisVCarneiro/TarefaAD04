@@ -1,8 +1,5 @@
 package tarefa04;
 
-
-
-import static tarefa04.ManejoJson.leerJsonProvincias;
 import java.util.Scanner;
 import LecturaXML.LeerXML;
 
@@ -11,7 +8,12 @@ public class Main {
     public static void main (String [] args){
         Scanner teclado = new Scanner (System.in);
         Cliente cliente = new Cliente();
-        
+        Provincia provincia = new Provincia();
+        Tenda t = new Tenda();
+        Producto p = new Producto();
+        Empregado e = new Empregado();
+        provincia.insertProvincias();
+
         boolean salir = false;
         while (!salir){
             System.out.println("------ MENU PRINCIPAL ------");
@@ -25,9 +27,11 @@ public class Main {
             int opcion = teclado.nextInt();
             switch(opcion){
                 case 1:
-                    
+                    //t.addTenda();
                     break;
                 case 2:
+                    int codProvincia = provincia.selProvincia();
+                    Provincia prov = provincia.getProvinciaSeleccionada(codProvincia);
                     break;
                 case 3:
                     break;
@@ -48,15 +52,15 @@ public class Main {
                 case 11:
                     break;
                 case 12:
-                    cliente.engadirCliente();
+                    cliente.addCliente();
                     break;
                 case 13:
-                    cliente.mostrarClientes();
+                    cliente.listClientes();
                     break;
                 case 14:
-                    String nomeClienteSeleccionado = cliente.seleccionarCliente();
-                    cliente.eliminarCliente(cliente.getClienteSeleccionado(nomeClienteSeleccionado));
-                    //cliente.mostrarClientes();
+                    String nomeClienteSeleccionado = cliente.selectCliente();
+                    cliente.deleteCliente(cliente.getClienteSeleccionado(nomeClienteSeleccionado));
+                    //cliente.listClientes();
                     System.out.println(cliente.getClienteSeleccionado(nomeClienteSeleccionado));
                     break;
                 case 15:

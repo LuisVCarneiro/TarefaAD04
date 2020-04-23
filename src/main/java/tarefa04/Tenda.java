@@ -2,6 +2,7 @@ package tarefa04;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -15,6 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 @Entity
 @Table(name = "Tenda")
@@ -59,7 +64,7 @@ public class Tenda implements Serializable {
         return "(" + this.idTenda + ") " + this.nome + " " + this.cidade + " " + this.provincia;
     }
 
-    public String getName() {
+    public String getNome() {
         return this.nome;
     }
 
@@ -71,7 +76,9 @@ public class Tenda implements Serializable {
         return this.cidade;
     }
     
-    public Provincia getProvincia(){
+    public Provincia getProvincia(Provincia p){
+        p.lerProvincias();
+        p.selProvincia();
         return this.provincia;
     }
     
@@ -80,7 +87,42 @@ public class Tenda implements Serializable {
         System.out.println("Nome da tenda: ");
         this.nome = teclado.nextLine();
         System.out.println("Cidade da tenda: ");
-        this.cidade = teclado.nextLine();
+        this.cidade = teclado.nextLine();     
     }
+    
+   /* public void addTenda(){
+        datosTenda();
+        try{
+            Session session = HibernateUtil.getSessionFactory().openSession();
+
+            Transaction tran = null;
+
+            Tenda t1 = new Tenda(getNome(),getCidade(),getProvincia());
+            tran = session.beginTransaction();
+            session.save(t1);
+            tran.commit();
+            session.close();
+                
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+    }*/
+    
+    public void listTendas(){
+        try {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Query q = session.createQuery("SELECT t FROM Tenda t");
+            List<Tenda> tendas = q.list();
+
+            for (Tenda tendaAux : tendas) {
+                 System.out.println(tendas.toString());
+            }
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
+    }
+    
 
 }

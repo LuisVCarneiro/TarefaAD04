@@ -3,7 +3,6 @@ package tarefa04;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import static java.io.File.separatorChar;
 import java.io.FileInputStream;
@@ -16,52 +15,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Query;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class ManejoJson {
 
-    private static final String rutaJsonProvincias = System.getProperty("user.dir") + separatorChar + "Provincias.json";
     private static final String rutaJsonConfig = System.getProperty("user.dir") + separatorChar + "config.json";
     private static final String rutaJsonStock = System.getProperty("user.dir") + separatorChar + "stock.json";
 
-    public static void leerJsonProvincias() {
-
-        //leemos el json
-        Gson gson = new Gson();
-        java.lang.reflect.Type tipoProvincias = new TypeToken<ArrayList<Provincia>>() {
-        }.getType();
-
-        // serializamos el archivo en un array de objetos provincia
-        if (new File(rutaJsonProvincias).exists()) {
-
-            ArrayList<Provincia> provincias = gson.fromJson(leerString(new File(rutaJsonProvincias)), tipoProvincias);
-
-            // introducimos las provincias en la BD
-            Transaction tran = null;
-            try {
-                //Collemos a sesión de Hibernate
-                Session session = HibernateUtil.getSessionFactory().openSession();
-
-                //Comenzamos unha transacción
-                tran = session.beginTransaction();
-
-                for (Provincia e : provincias) {
-                    session.saveOrUpdate(e);
-                }
-
-                //Facemos un commit da transacción
-                tran.commit();
-
-            } catch (HibernateException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-
-        }
-
-    }
 
     public static LinkedTreeMap leerdbConnection() {
         Gson gson = new Gson();
