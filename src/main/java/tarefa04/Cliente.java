@@ -1,7 +1,7 @@
 package tarefa04;
 
-
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.Column;
@@ -30,7 +30,6 @@ public class Cliente implements Serializable {
     private String apelidos;
     @Column(name = "email")
     private String email;
-
     
     public Cliente(String nome, String apelidos, String email) {
         this.nome = nome;
@@ -38,18 +37,22 @@ public class Cliente implements Serializable {
         this.email = email;
     }
 
+    HashMap <Integer, Cliente> mapaClientes = new HashMap <>();
+    
     public Cliente() {
 
     }
     
-     @Override
-    public String toString() {
-        String tenda = "(" + this.id  + ") " + this.nome  + " " + this.apelidos+ " " + this.email ;
-        return tenda;
+    public String toString(){
+        return "Cliente: Id: " + id + ", nome: " + nome + ", apelidos: " + apelidos + ", email: " + email;
     }
 
     public String getNome() {
         return this.nome;
+    }
+    
+    public int getId(){
+    return this.id;
     }
     
     public String getApelido(){
@@ -81,9 +84,7 @@ public class Cliente implements Serializable {
             tran = session.beginTransaction();
             session.save(c1);
             tran.commit();
-            session.close();
-                
-
+            session.close();        
         } catch (HibernateException e) {
             e.printStackTrace();
         }
@@ -93,7 +94,7 @@ public class Cliente implements Serializable {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Query q = session.createQuery("SELECT c FROM Cliente c");
-            List<Cliente> clientes = q.list();
+            List <Cliente> clientes = q.list();
 
             for (Cliente cliente : clientes) {
                  System.out.println(cliente.toString());
@@ -104,48 +105,44 @@ public class Cliente implements Serializable {
         }
     }
     
-    public String selectCliente(){
+    public int selectCliente(){
         Scanner teclado = new Scanner (System.in);
-        System.out.println("Escribe o nome do cliente que desexas seleccionar");
+        System.out.println("Escribe o id do cliente que desexas seleccionar");
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
-            Query q = session.createQuery("SELECT x FROM Cliente x");
-            List<Cliente> clientes = q.list();
-
+            Query q = session.createQuery("SELECT c FROM Cliente c");
+            List <Cliente> clientes = q.list();
             for (Cliente cliente : clientes) {
-                 System.out.println(cliente.getNome());
+                 System.out.println(cliente.toString());
+                 int key = cliente.getId();
+                 mapaClientes.put(key, cliente);        
             }
-
         } catch (HibernateException e) {
             e.printStackTrace();
         }
-        return teclado.nextLine();
+        return teclado.nextInt();
      }
     
-    public Cliente getClienteSeleccionado(String nomeCliente){
-        try{
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Query q = session.createQuery("SELECT x FROM Cliente x");
-            List <Cliente> clientes = q.list();
-            }catch (HibernateException e){
-            e.printStackTrace();
-        }
-        return new Cliente();
+    public Cliente getClienteSeleccionado(int idClienteSeleccionado){
+        return mapaClientes.get(idClienteSeleccionado);
     }
     
     
-    public void deleteCliente(Cliente c1){
-
+    public void deleteCliente(){
         try{
-            Session session = HibernateUtil.getSessionFactory().openSession();   
-            Transaction tran = null;           
-            tran = session.beginTransaction();
-            session.delete(c1);
-            tran.commit();
-            session.close();
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction tran = null;
+            int idClienteSeleccionado = selectCliente();
+            Cliente clienteBorrar = getClienteSeleccionado(idClienteSeleccionado);
             
-        }catch (HibernateException e) {
+            tran = session.beginTransaction();
+            session.remove(clienteBorrar);
+            tran.commit();
+            session.close();  
+            System.out.println("O cliente " + idClienteSeleccionado + " foi eliminado.");
+        } catch (HibernateException e) {
             e.printStackTrace();
+            System.out.println("Non se eliminou o cliente");
         }
     }
 }

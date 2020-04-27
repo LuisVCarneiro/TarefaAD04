@@ -58,10 +58,7 @@ public class Main {
                     cliente.listClientes();
                     break;
                 case 14:
-                    String nomeClienteSeleccionado = cliente.selectCliente();
-                    cliente.deleteCliente(cliente.getClienteSeleccionado(nomeClienteSeleccionado));
-                    //cliente.listClientes();
-                    System.out.println(cliente.getClienteSeleccionado(nomeClienteSeleccionado));
+                    cliente.deleteCliente();
                     break;
                 case 15:
                     ManejoJson json = new ManejoJson();
